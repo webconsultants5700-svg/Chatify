@@ -12,6 +12,13 @@ import { app, server } from "./lib/socket.js";
 const __dirname = path.resolve();
 
 const PORT = ENV.PORT || 3000;
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; connect-src 'self' wss: https:;"
+  );
+  next();
+});
 
 app.use(express.json({ limit: "5mb" })); // req.body
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
