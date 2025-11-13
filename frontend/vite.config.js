@@ -9,20 +9,31 @@ if (!globalThis.crypto) {
 
 export default defineConfig({
   plugins: [react()],
-  
-  // 🚫 Disable eval-based sourcemaps (Fix CSP error)
+
+  // ✅ Use relative paths for static hosting
+  base: './',
+
   build: {
-    sourcemap: false, 
-    minify: 'esbuild',  // no eval used
+    // 🚫 Disable eval-based sourcemaps (Fix CSP error)
+    sourcemap: false,
+    minify: 'esbuild', // no eval
     rollupOptions: {
       output: {
-        inlineDynamicImports: true  // safer for strict CSP
+        inlineDynamicImports: true // safer for strict CSP
       }
     }
   },
 
-  // 🚫 Remove development HMR code from production
   esbuild: {
-    legalComments: "none"
+    // 🚫 Remove comments from build
+    legalComments: 'none'
+  },
+
+  // Optional: for React Router static hosting
+  resolve: {
+    alias: {
+      // make sure crypto alias works for Web Crypto
+      crypto: 'crypto-browserify'
+    }
   }
 })
